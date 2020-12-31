@@ -2,6 +2,7 @@ import { makeExecutableSchema } from 'graphql-tools';
 import { gql } from 'apollo-server-micro';
 import { GraphQLError } from 'graphql';
 import getConfig from 'next/config';
+import sortBy from 'lodash.sortby';
 
 const { serverRuntimeConfig } = getConfig();
 const { fiatApiKey } = serverRuntimeConfig;
@@ -102,7 +103,7 @@ const resolvers = {
         return newArray;
       }, []);
 
-      return enriched;
+      return sortBy(enriched, 'rates.satFiat');
     },
   },
 };
