@@ -15,4 +15,31 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   hello?: Maybe<Scalars['Boolean']>;
+  getLatest: Array<CurrencyRate>;
+};
+
+export type CurrencyRate = {
+  __typename?: 'CurrencyRate';
+  currency: Scalars['String'];
+  rates: Rate;
+  info?: Maybe<Info>;
+};
+
+export type Rate = {
+  __typename?: 'Rate';
+  fiatEur: Scalars['String'];
+  fiatBtc: Scalars['String'];
+  fiatSat: Scalars['String'];
+  satFiat: Scalars['String'];
+};
+
+export type Info = {
+  __typename?: 'Info';
+  symbol?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  symbol_native?: Maybe<Scalars['String']>;
+  decimal_digits?: Maybe<Scalars['Float']>;
+  rounding?: Maybe<Scalars['Float']>;
+  code?: Maybe<Scalars['String']>;
+  name_plural?: Maybe<Scalars['String']>;
 };

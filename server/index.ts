@@ -3,6 +3,7 @@ import { gql } from 'apollo-server-micro';
 import { GraphQLError } from 'graphql';
 import getConfig from 'next/config';
 import sortBy from 'lodash.sortby';
+import { currencyInfo } from './currencyInfo';
 
 const { serverRuntimeConfig } = getConfig();
 const { fiatApiKey } = serverRuntimeConfig;
@@ -16,6 +17,7 @@ const typeDefs = gql`
   type CurrencyRate {
     currency: String!
     rates: Rate!
+    info: Info
   }
 
   type Rate {
@@ -23,6 +25,16 @@ const typeDefs = gql`
     fiatBtc: String!
     fiatSat: String!
     satFiat: String!
+  }
+
+  type Info {
+    symbol: String
+    name: String
+    symbol_native: String
+    decimal_digits: Float
+    rounding: Float
+    code: String
+    name_plural: String
   }
 `;
 
@@ -86,6 +98,7 @@ const resolvers = {
 
       const enriched = keys.reduce<CurrencyRate[]>((prev, k) => {
         const eurRate = allRates[k];
+        const info = currencyInfo[k];
 
         if (!eurRate || k === 'BTC') {
           return prev;
@@ -98,7 +111,7 @@ const resolvers = {
           satFiat: 1 / (satEurRate * eurRate),
         };
 
-        const newArray = [...prev, { currency: k, rates }];
+        const newArray = [...prev, { currency: k, rates, info }];
 
         return newArray;
       }, []);

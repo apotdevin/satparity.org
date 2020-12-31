@@ -11,7 +11,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={apolloClient}>
       <Head>
-        <title>SkeletonApp</title>
+        <title>SatParity - Satoshi Fiat Comparison</title>
       </Head>
       <GlobalStyles />
       <Component {...pageProps} />
