@@ -17,6 +17,18 @@ const S = {
   `,
 };
 
+const getFormat = (decimals: number) => {
+  switch (decimals) {
+    case 0:
+      return '0,0';
+    case 1:
+      return '0,0.0';
+    case 2:
+    default:
+      return '0,0.00';
+  }
+};
+
 const Index: FC = () => {
   const { data, error } = useGetLatestQuery();
 
@@ -43,14 +55,20 @@ const Index: FC = () => {
       Math.round((Number(s.rates.fiatSat) || 0) * 10000) / 100
     }%`;
 
-    const price = numeral(Number(s.rates.fiatBtc) || 0).format('0,0.00');
+    const price = numeral(Number(s.rates.fiatBtc) || 0).format(
+      getFormat(s.info?.decimal_digits ?? 2)
+    );
 
     return {
       name: s.info?.name ? `${s.info.name} (${s.currency})` : s.currency,
       parity,
       price,
-      sat: numeral(Number(s.rates.fiatSat) || 0).format('0,0.00'),
-      fiat: numeral(Number(s.rates.satFiat) || 0).format('0,0.00'),
+      sat: numeral(Number(s.rates.fiatSat) || 0).format(
+        getFormat(s.info?.decimal_digits ?? 2)
+      ),
+      fiat: numeral(Number(s.rates.satFiat) || 0).format(
+        getFormat(s.info?.decimal_digits ?? 2)
+      ),
     };
   });
 

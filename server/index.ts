@@ -104,11 +104,13 @@ const resolvers = {
           return prev;
         }
 
+        const decimalNormalize = Math.pow(10, info?.decimal_digits || 0);
+
         const rates = {
           fiatEur: eurRate,
           fiatBtc: btcEurRate * eurRate,
-          fiatSat: satEurRate * eurRate,
-          satFiat: 1 / (satEurRate * eurRate),
+          fiatSat: satEurRate * eurRate * decimalNormalize,
+          satFiat: 1 / (satEurRate * eurRate * decimalNormalize),
         };
 
         const newArray = [...prev, { currency: k, rates, info }];
