@@ -8,38 +8,45 @@ export type GetLatestQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 export type GetLatestQuery = (
   { __typename?: 'Query' }
-  & { getLatest: Array<(
-    { __typename?: 'CurrencyRate' }
-    & Pick<Types.CurrencyRate, 'currency'>
-    & { rates: (
-      { __typename?: 'Rate' }
-      & Pick<Types.Rate, 'fiatEur' | 'fiatBtc' | 'fiatSat' | 'satFiat'>
-    ), info?: Types.Maybe<(
-      { __typename?: 'Info' }
-      & Pick<Types.Info, 'symbol' | 'name' | 'symbol_native' | 'decimal_digits' | 'rounding' | 'code' | 'name_plural'>
+  & { getLatest: (
+    { __typename?: 'Latest' }
+    & Pick<Types.Latest, 'btcEurRate'>
+    & { currencies: Array<(
+      { __typename?: 'CurrencyRate' }
+      & Pick<Types.CurrencyRate, 'currency'>
+      & { rates: (
+        { __typename?: 'Rate' }
+        & Pick<Types.Rate, 'fiatEur' | 'fiatBtc' | 'fiatSat' | 'satFiat'>
+      ), info?: Types.Maybe<(
+        { __typename?: 'Info' }
+        & Pick<Types.Info, 'symbol' | 'name' | 'symbol_native' | 'decimal_digits' | 'rounding' | 'code' | 'name_plural'>
+      )> }
     )> }
-  )> }
+  ) }
 );
 
 
 export const GetLatestDocument = gql`
     query GetLatest {
   getLatest {
-    currency
-    rates {
-      fiatEur
-      fiatBtc
-      fiatSat
-      satFiat
-    }
-    info {
-      symbol
-      name
-      symbol_native
-      decimal_digits
-      rounding
-      code
-      name_plural
+    btcEurRate
+    currencies {
+      currency
+      rates {
+        fiatEur
+        fiatBtc
+        fiatSat
+        satFiat
+      }
+      info {
+        symbol
+        name
+        symbol_native
+        decimal_digits
+        rounding
+        code
+        name_plural
+      }
     }
   }
 }

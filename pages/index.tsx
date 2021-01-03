@@ -15,6 +15,16 @@ const S = {
   table: styled.div`
     max-width: 100%;
   `,
+  image: styled.img`
+    border-radius: 50%;
+    margin: 60px 0;
+  `,
+  dot: styled.div<{ dotColor: string }>`
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    background-color: ${({ dotColor }) => dotColor};
+  `,
 };
 
 const getFormat = (decimals: number) => {
@@ -26,6 +36,21 @@ const getFormat = (decimals: number) => {
     case 2:
     default:
       return '0,0.00';
+  }
+};
+
+const getColor = (parity: number) => {
+  switch (true) {
+    case parity >= 100:
+      return '#a0d911';
+    case parity >= 80:
+      return '#ffd300';
+    case parity >= 60:
+      return '#ffa940';
+    case parity >= 40:
+      return '#FD5F00';
+    default:
+      return 'red';
   }
 };
 
@@ -42,27 +67,36 @@ const Index: FC = () => {
   }
 
   const columns = [
+    { Header: '', accessor: 'dot' },
     { Header: 'Currency', accessor: 'name' },
     { Header: 'Parity', accessor: 'parity' },
     { Header: 'BTC Price', accessor: 'price' },
     { Header: 'Sat to Fiat', accessor: 'sat' },
     { Header: 'Fiat to Sat', accessor: 'fiat' },
+    { Header: 'Parity BTC Price (EUR)', accessor: 'priceForParity' },
   ];
 
-  const finalData = data?.getLatest || [];
+  const btcEurRate = Number(data?.getLatest.btcEurRate) || 0;
+  const finalData = data?.getLatest.currencies || [];
   const tableData = finalData.map(s => {
-    const parity = `${
-      Math.round((Number(s.rates.fiatSat) || 0) * 10000) / 100
-    }%`;
+    const parityNumber =
+      Math.round((Number(s.rates.fiatSat) || 0) * 10000) / 100;
+    const priceNumber = Number(s.rates.fiatBtc) || 0;
 
-    const price = numeral(Number(s.rates.fiatBtc) || 0).format(
+    const parity = `${parityNumber}%`;
+    const price = numeral(priceNumber).format(
       getFormat(s.info?.decimal_digits ?? 2)
     );
 
+    const priceForParityNumber = (1 / parityNumber) * btcEurRate * 100;
+    const priceForParity = numeral(priceForParityNumber).format(getFormat(2));
+
     return {
+      dot: <S.dot dotColor={getColor(parityNumber)} />,
       name: s.info?.name ? `${s.info.name} (${s.currency})` : s.currency,
       parity,
       price,
+      priceForParity,
       sat: numeral(Number(s.rates.fiatSat) || 0).format(
         getFormat(s.info?.decimal_digits ?? 2)
       ),
@@ -74,7 +108,7 @@ const Index: FC = () => {
 
   return (
     <S.wrapper>
-      <S.title>SatParity</S.title>
+      <S.title>Satoshi - Fiat - Parity</S.title>
       <S.table>
         <Table
           tableColumns={columns}
@@ -83,6 +117,7 @@ const Index: FC = () => {
           withBorder={true}
         />
       </S.table>
+      <S.image src={'/assets/parity.jpg'} alt={'bitcoin parity'} />
     </S.wrapper>
   );
 };

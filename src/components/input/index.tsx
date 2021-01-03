@@ -17,10 +17,10 @@ export const StyledInput = styled.input<InputProps>`
   padding: 5px;
   height: 38px;
   margin: 8px 0;
-  border: 1px solid black;
+  border: 1px solid white;
   background: none;
   border-radius: 5px;
-  color: black;
+  color: white;
   ${({ maxWidth }) =>
     maxWidth &&
     css`

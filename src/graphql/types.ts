@@ -15,7 +15,13 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   hello?: Maybe<Scalars['Boolean']>;
-  getLatest: Array<CurrencyRate>;
+  getLatest: Latest;
+};
+
+export type Latest = {
+  __typename?: 'Latest';
+  btcEurRate: Scalars['String'];
+  currencies: Array<CurrencyRate>;
 };
 
 export type CurrencyRate = {

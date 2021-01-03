@@ -34,7 +34,7 @@ const Styles = styled.div`
       ${({ withBorder }: StyledTableProps) =>
         withBorder &&
         css`
-          border-bottom: 1px solid black;
+          border-bottom: 1px solid #5163ba;
         `}
       ${({ alignCenter }: StyledTableProps) =>
         alignCenter &&

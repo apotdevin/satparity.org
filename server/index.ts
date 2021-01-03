@@ -11,7 +11,12 @@ const { fiatApiKey } = serverRuntimeConfig;
 const typeDefs = gql`
   type Query {
     hello: Boolean
-    getLatest: [CurrencyRate!]!
+    getLatest: Latest!
+  }
+
+  type Latest {
+    btcEurRate: String!
+    currencies: [CurrencyRate!]!
   }
 
   type CurrencyRate {
@@ -118,7 +123,7 @@ const resolvers = {
         return newArray;
       }, []);
 
-      return sortBy(enriched, 'rates.satFiat');
+      return { btcEurRate, currencies: sortBy(enriched, 'rates.satFiat') };
     },
   },
 };
